@@ -86,5 +86,3 @@ const port = process.env.PORT || 5000
 app.listen(port, () => {
   console.log('server is up '+ port);
 })
-
-module.exports = app;
