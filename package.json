@@ -1,0 +1,32 @@
+{
+  "name": "web-automation",
+  "version": "1.7.0",
+  "main": "src/index.js",
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "helmet": "^4.1.0",
+    "http-status": "^1.4.0",
+    "joi": "^17.3.0",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "puppeteer": "^21.6.1",
+    "snoowrap": "^1.23.0",
+    "validator": "^13.0.0",
+    "winston": "^3.2.1",
+    "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0",
+    "prettier": "^2.0.5"
+  }
+}
