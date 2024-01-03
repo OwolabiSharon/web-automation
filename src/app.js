@@ -47,7 +47,7 @@ app.use(express.urlencoded({ extended: true }));
 //   }
 // });
 app.get('/', async (req, res) => {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch();
   // Create a new page
   const page = await browser.newPage();
 
