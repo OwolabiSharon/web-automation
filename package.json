@@ -19,7 +19,7 @@
     "joi": "^17.3.0",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
-    "puppeteer": "^16.2.0",
+    "puppeteer": "^21.6.1",
     "snoowrap": "^1.23.0",
     "validator": "^13.0.0",
     "winston": "^3.2.1",
