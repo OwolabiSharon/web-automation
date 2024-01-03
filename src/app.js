@@ -1,5 +1,4 @@
 const express = require('express');
-const httpStatus = require('http-status');
 const ApiError = require('./utils/ApiError');
 const fileWorks = require('./utils/fileWorks');
 const redditApi = require('./utils/redditApi');
