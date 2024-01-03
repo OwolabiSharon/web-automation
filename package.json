@@ -12,6 +12,7 @@
     "dev": "nodemon src/app.js"
   },
   "dependencies": {
+    "axios": "^1.6.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "puppeteer": "^16.2.0",
