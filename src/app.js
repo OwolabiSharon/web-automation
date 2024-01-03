@@ -67,7 +67,7 @@ async function performLoginAndRecurringActions(account) {
 
     recurringAction()
     // Set an interval for the recurring actions (every 30-50 minutes in this example)
-    const intervalId = setInterval(recurringAction, 5 * 60000); // Random interval between 30-50 minutes
+    const intervalId = setInterval(recurringAction, 30 * 60000); // Random interval between 30-50 minutes
     
   } finally {
     // Close the browser

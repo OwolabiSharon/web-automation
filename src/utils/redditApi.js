@@ -26,11 +26,11 @@ async function getRandomMemeWithTopComment() {
         console.log("i work here");
         const posts = await reddit.getSubreddit(randomItem).getTop({ time: 'month', limit: 20 });
       console.log("i work here 2");
-      const jpegPosts = posts.filter(post => post.url.endsWith('.jpeg'));
+      const jpegPosts = posts.filter(post => post.url.endsWith('.jpg'));
       if (jpegPosts.length > 0) {
         const randomPost = jpegPosts[Math.floor(Math.random() * jpegPosts.length)];
         console.log(randomPost.url, "post url");
-        // Get the top comment for the selected post
+
         const comments = await randomPost.comments.fetchAll({ limit: 1 });
         const topComment = comments.length > 0 ? comments[0].body : 'No comments available';
         console.log("i work here 4");
