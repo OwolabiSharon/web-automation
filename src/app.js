@@ -4,6 +4,7 @@ const ApiError = require('./utils/ApiError');
 const fileWorks = require('./utils/fileWorks');
 const redditApi = require('./utils/redditApi');
 const puppeteer = require('puppeteer');
+const chromium = require('chrome-aws-lambda');
 
 const app = express();
 
@@ -47,19 +48,25 @@ app.use(express.urlencoded({ extended: true }));
 //   }
 // });
 app.get('/', async (req, res) => {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({
+    executablePath: await chromium.executablePath,
+    args: chromium.args,
+    headless: true,
+  });
   // Create a new page
   const page = await browser.newPage();
 
   // Replace these with your actual credentials and login URL
   const username = 'your_username';
   const password = 'your_password';
-  const loginUrl = 'https://www.instagram.com/';
+  const loginUrl = 'https://www.example.com/';
   try {
+
     // Navigate to the login page
     await page.goto(loginUrl);
+    console.log("i work");
     await page.waitForSelector('input[name=username]');
-    
+    console.log("i work");
     await page.type('input[name=username]', username); 
     await page.type('input[name=password]', password); 
     await page.click('button[type=submit]'); 
