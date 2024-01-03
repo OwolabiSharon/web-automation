@@ -3,7 +3,6 @@ const ApiError = require('./utils/ApiError');
 const fileWorks = require('./utils/fileWorks');
 const redditApi = require('./utils/redditApi');
 const puppeteer = require('puppeteer');
-const chromium = require('chrome-aws-lambda');
 
 const app = express();
 
