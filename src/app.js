@@ -47,12 +47,14 @@ app.use(express.urlencoded({ extended: true }));
 //   }
 // });
 app.get('/', async (req, res) => {
+  console.log("i work");
   const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  console.log("i work still");
   // Create a new page
   const page = await browser.newPage();
-
+  console.log("i work 2");
   // Replace these with your actual credentials and login URL
   const username = 'your_username';
   const password = 'your_password';
