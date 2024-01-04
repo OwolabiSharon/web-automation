@@ -18,6 +18,30 @@ const filePath = 'src/accounts.txt';
 const accounts = fileWorks.getAccountsFromFile(filePath);
 console.log(accounts);
 
+async function cancelPopUps(page) {
+  try {
+    // Wait for the selector with a timeout of 5000 milliseconds (adjust as needed)
+    const popUpExit = await page.waitForSelector('._a9--._ap36._a9_1', { timeout: 5000 });
+
+    if (popUpExit) {
+      // Selector exists, click on it
+      await popUpExit.click();
+    } else {
+      console.log('Selector not found. Continuing with the rest of the code.');
+    }
+  } catch (error) {
+    if (error.name === 'TimeoutError') {
+      console.log('Selector not found within the specified timeout. Continuing with the rest of the code.');
+    } else {
+      throw error; // Re-throw other errors
+    }
+  }
+
+  // Continue with the rest of your code after the try-catch block
+  console.log('Code continues here.');
+}
+
+
 async function performLoginAndRecurringActions(account) {
   const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -33,7 +57,7 @@ async function performLoginAndRecurringActions(account) {
     await page.type('input[name=username]', account.username);
     await page.type('input[name=password]', account.password);
     await page.click('button[type=submit]');
-
+    await cancelPopUps(page)
     // // Wait for navigation or any other action after login (replace with specific waiting conditions)
     await page.waitForSelector('svg[aria-label="New post"]',{ timeout: 60000 }); 
     
@@ -108,8 +132,14 @@ async function postMeme(page, caption) {
     console.log('Successfully logged in!');
     await page.click(nextSelector);
 
-    await page.waitForTimeout(60000);
-    await page.click('.x1i10hfl.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz.x6s0dn4.xjbqb8w.x1ejq31n.xd10rxx.x1sy0etr.x17r0tee.x1ypdohk.x78zum5.xl56j7k.x1y1aw1k.x1sxyh0.xwib8y2.xurb0ha.xcdnw81');
+    await page.waitForTimeout(5000);
+    console.log(" i work");
+    const viewportSize = await page.viewport();
+    console.log(viewportSize);
+    const x = 10;
+    const y = viewportSize.height - 10;
+    console.log(x,y);
+    await page.mouse.click(x, y);
   } catch (error) {
     console.log(error);
   }
