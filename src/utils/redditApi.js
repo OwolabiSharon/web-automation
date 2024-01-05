@@ -10,7 +10,7 @@ const reddit = new snoowrap({
   password: '@#Phone123',
 });
 
-const subredditList = ['memes'];
+const subredditList = ['memes', 'dankmemes', 'meme'];
 
 // Function to select a random item from the list
 function getRandomItem(list) {
@@ -26,10 +26,9 @@ async function getRandomMemeWithTopComment() {
         console.log("i work here");
         const posts = await reddit.getSubreddit(randomItem).getTop({ time: 'month', limit: 20 });
       console.log("i work here 2");
-      const jpegPosts = posts.filter(post => post.url.toLowerCase().endsWith('.jpeg') || post.url.toLowerCase().endsWith('.jpg'));
-      if (jpegPosts.length > 0) {
-        const randomPost = jpegPosts[Math.floor(Math.random() * jpegPosts.length)];
-        console.log(randomPost.url, "post url",jpegPosts.length, posts.length );
+      if (posts.length > 0) {
+        const randomPost = posts[Math.floor(Math.random() * posts.length)];
+        console.log(randomPost.url, "post url", posts.length );
 
         const comments = await randomPost.comments.fetchAll({ limit: 1 });
         const topComment = comments.length > 0 ? comments[0].body : 'No comments available';

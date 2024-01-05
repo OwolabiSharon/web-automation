@@ -3,6 +3,8 @@ const ApiError = require('./utils/ApiError');
 const fileWorks = require('./utils/fileWorks');
 const redditApi = require('./utils/redditApi');
 const puppeteer = require('puppeteer');
+const path = require('path');
+
 
 const app = express();
 
@@ -12,7 +14,7 @@ let caption = ""
 const numberOfPostPerAccount = 5
 let currentIndex = 0; // Index for cycling through accounts
 let iterationsCount = 0;
-const localFilePath = 'downloaded-file.jpg';
+let localFilePath = 'downloaded-file.jpg';
 
 const filePath = 'src/accounts.txt';
 const accounts = fileWorks.getAccountsFromFile(filePath);
@@ -69,10 +71,13 @@ async function performLoginAndRecurringActions(account) {
         const { memeUrl, topComment, title } = await redditApi.getRandomMemeWithTopComment();
         console.log("i work 2");
 
-        if (memeUrl) {
-          console.log(memeUrl, topComment, title);
-          await redditApi.downloadAndUploadFile(memeUrl, localFilePath);
-          caption = title || topComment;
+      if (memeUrl) {
+          const fileExtension = path.extname(memeUrl).toLowerCase();
+          localFilePath = "downloaded-file" + fileExtension
+          console.log(memeUrl, topComment, title );
+        await redditApi.downloadAndUploadFile(memeUrl, localFilePath);
+        console.log(localFilePath);
+          caption = Math.random() < 0.5 ? title : topComment;
         } else {
           console.log('Failed to fetch meme with top comment.');
         }
@@ -113,7 +118,7 @@ async function postMeme(page, caption) {
       page.click('.x9f619.xjbqb8w.x78zum5.x168nmei.x13lgxp2.x5pf9jr.xo71vjh.x1iorvi4.x150jy0e.xjkvuk6.x1e558r4.x1n2onr6.x1plvlek.xryxfnj.x1c4vz4f.x2lah0s.xdt5ytf.xqjyukv.x1qjc9v5.x1oa3qoh.x1nhvcw1'), // some button that triggers file selection
     ]);
 
-    await fileChooser.accept(['downloaded-file.jpg'])
+    await fileChooser.accept([localFilePath])
     const nextSelector = ".x9f619.xjbqb8w.x78zum5.x168nmei.x13lgxp2.x5pf9jr.xo71vjh.xyamay9.x1pi30zi.x1l90r2v.x1swvt13.x1n2onr6.x1plvlek.xryxfnj.x1c4vz4f.x2lah0s.xdt5ytf.xqjyukv.x1qjc9v5.x1oa3qoh.x1nhvcw1"
     await page.waitForSelector(nextSelector,{ timeout: 60000 }); 
     console.log("got it");
@@ -153,6 +158,7 @@ app.use(express.urlencoded({ extended: true }));
 
 function cycleThroughAccounts() {
   const currentAccount = accounts[currentIndex];
+  console.log(currentAccount, "current account");
   performLoginAndRecurringActions(currentAccount);
 }
 
