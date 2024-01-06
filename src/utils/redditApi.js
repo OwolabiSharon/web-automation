@@ -1,6 +1,9 @@
 const snoowrap = require('snoowrap');
 const fs = require('fs');
 const axios = require('axios');
+const got = require('got');
+const { log } = require('console');
+const path = require('path');
 
 const reddit = new snoowrap({
   userAgent: 'web automation',
@@ -10,7 +13,7 @@ const reddit = new snoowrap({
   password: '@#Phone123',
 });
 
-const subredditList = ['memes', 'dankmemes', 'meme'];
+const subredditList = ['blursed_videos']; //switch to memes to test photos
 
 // Function to select a random item from the list
 function getRandomItem(list) {
@@ -24,16 +27,27 @@ const randomItem = getRandomItem(subredditList);
 async function getRandomMemeWithTopComment() {
     try {
         console.log("i work here");
-        const posts = await reddit.getSubreddit(randomItem).getTop({ time: 'month', limit: 20 });
+      const posts = await reddit.getSubreddit(randomItem).getTop({ time: 'month', limit: 20 });
+      const filteredPosts = posts.filter(post => !post.url.endsWith('.gif'));
+      const postUrls = filteredPosts.map(post => post.url);
+
+// Log the URLs
+console.log('Post URLs:', postUrls );
       console.log("i work here 2");
-      if (posts.length > 0) {
-        const randomPost = posts[Math.floor(Math.random() * posts.length)];
-        console.log(randomPost.url, "post url", posts.length );
+      if (filteredPosts.length > 0) {
+        let videoUrl = null
+        const randomPost = filteredPosts[Math.floor(Math.random() * filteredPosts.length)];
+        console.log(randomPost.url, "post url", filteredPosts.length );
 
         const comments = await randomPost.comments.fetchAll({ limit: 1 });
         const topComment = comments.length > 0 ? comments[0].body : 'No comments available';
         console.log("i work here 4");
-        return { memeUrl: randomPost.url, topComment, title: randomPost.title };
+        if (randomPost.is_video) {
+          console.log("im video");
+          videoUrl = randomPost.media.reddit_video.fallback_url
+        }
+        console.log(randomPost);
+        return { memeUrl: randomPost.url,videoUrl, topComment, title: randomPost.title };
       } else {
         return { memeUrl: "https://i.redd.it/x38c1c8mxlv21.jpg", topComment: "404 for real", title: "404 for real" };
       }
