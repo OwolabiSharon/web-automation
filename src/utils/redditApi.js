@@ -13,7 +13,7 @@ const reddit = new snoowrap({
   password: '@#Phone123',
 });
 
-const subredditList = ['blursed_videos']; //switch to memes to test photos
+const subredditList = ['blursed_videos', 'memes']; //switch to memes to test photos
 
 // Function to select a random item from the list
 function getRandomItem(list) {
@@ -26,27 +26,24 @@ const randomItem = getRandomItem(subredditList);
 
 async function getRandomMemeWithTopComment() {
     try {
-        console.log("i work here");
+        console.log("getting meme");
       const posts = await reddit.getSubreddit(randomItem).getTop({ time: 'month', limit: 20 });
       const filteredPosts = posts.filter(post => !post.url.endsWith('.gif'));
       const postUrls = filteredPosts.map(post => post.url);
 
 // Log the URLs
-console.log('Post URLs:', postUrls );
-      console.log("i work here 2");
+      console.log('Post URLs in meme options:', postUrls );
       if (filteredPosts.length > 0) {
         let videoUrl = null
         const randomPost = filteredPosts[Math.floor(Math.random() * filteredPosts.length)];
-        console.log(randomPost.url, "post url", filteredPosts.length );
+        console.log(randomPost.url, "post url", " number of valid memes", filteredPosts.length );
 
         const comments = await randomPost.comments.fetchAll({ limit: 1 });
         const topComment = comments.length > 0 ? comments[0].body : 'No comments available';
-        console.log("i work here 4");
         if (randomPost.is_video) {
-          console.log("im video");
+          console.log("meme is a video");
           videoUrl = randomPost.media.reddit_video.fallback_url
         }
-        console.log(randomPost);
         return { memeUrl: randomPost.url,videoUrl, topComment, title: randomPost.title };
       } else {
         return { memeUrl: "https://i.redd.it/x38c1c8mxlv21.jpg", topComment: "404 for real", title: "404 for real" };

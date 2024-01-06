@@ -27,7 +27,7 @@ console.log(accounts, tagAccountsList );
 async function cancelPopUps(page, selector) {
   try {
     // Wait for the selector with a timeout of 5000 milliseconds (adjust as needed)
-    const popUpExit = await page.waitForSelector(selector, { timeout: 5000 });
+    const popUpExit = await page.waitForSelector(selector, { timeout: 30000 });
 
     if (popUpExit) {
       // Selector exists, click on it
@@ -42,20 +42,17 @@ async function cancelPopUps(page, selector) {
       throw error; // Re-throw other errors
     }
   }
-
-  // Continue with the rest of your code after the try-catch block
-  console.log('Code continues here.');
 }
 
 async function tagAccounts(page, tagAccount) {
   try {
     // Wait for the selector with a timeout of 5000 milliseconds (adjust as needed)
-    const tagButton = await page.waitForSelector('._acan._acao._acas._aj1-._ap30', { timeout: 5000 });
+    const tagButton = await page.waitForSelector('._abfz._abf-._abg1', { timeout: 30000 });
 
     if (tagButton) {
       // Selector exists, click on it
       await tagButton.click();
-      await page.waitForTimeout(5000);
+      await page.waitForSelector('input[type=search]');
       await page.type('input[type=search]', tagAccount);
 
       await page.waitForSelector('._acn5');
@@ -65,12 +62,13 @@ async function tagAccounts(page, tagAccount) {
     }
   } catch (error) {
     if (error.name === 'TimeoutError') {
+      console.log("no tag people button");
       //commented out because isntagram is having issues with tags on photos i did it manually and it didnt work
       
       // await page.waitForSelector('._aazm', { timeout: 5000 });
       // await page.click('._aazm');
       
-      // await page.waitForTimeout(5000);
+      // await page.waitForSelector('input[type=search]');
       // await page.type('input[type=search]', tagAccount);
 
       // await page.waitForSelector('._acn5');
@@ -108,16 +106,14 @@ async function performLoginAndRecurringActions(account) {
     console.log('Successfully logged in!');
 
     const recurringAction = async () => {
-        console.log("i work");
-        console.log("i work");
+        console.log("running post on " ,account.username );
         const { memeUrl, videoUrl, topComment, title } = await redditApi.getRandomMemeWithTopComment();
 
       if (memeUrl) {
           const fileExtension = path.extname(memeUrl).toLowerCase();
           localFilePath = "downloaded-file" + fileExtension
-          console.log(memeUrl, videoUrl, topComment, title, fileExtension + "gextentfile");
+          console.log(memeUrl, videoUrl, topComment, title);
         if (videoUrl != null) {
-            console.log("im video and i am not null");
             await redditApi.downloadAndUploadFile(videoUrl, "downloaded-file.mp4");
             await new Promise((resolve, reject) => {
               ffmpeg('downloaded-file.mp4')
@@ -140,10 +136,9 @@ async function performLoginAndRecurringActions(account) {
           } else {
             await redditApi.downloadAndUploadFile(memeUrl, localFilePath);
           }
-          console.log(localFilePath, "path before posting meme");
           caption = Math.random() < 0.5 ? title : topComment;
         } else {
-          console.log('Failed to fetch meme with top comment.');
+          console.log('Failed to fetch meme.');
         }
         postMeme(page, caption)
       iterationsCount++;
@@ -176,7 +171,9 @@ async function postMeme(page, caption) {
     const viewportSize = await page.viewport();
     const x = 10;
     const y = viewportSize.height - 10;
-    await page.mouse.click(x, y);
+    page.mouse.click(x, y);
+    console.log("clicked away modal if any");
+    
     await page.click('svg[aria-label="New post"]');
     await page.waitForSelector('.x9f619.xjbqb8w.x78zum5.x168nmei.x13lgxp2.x5pf9jr.xo71vjh.x1iorvi4.x150jy0e.xjkvuk6.x1e558r4.x1n2onr6.x1plvlek.xryxfnj.x1c4vz4f.x2lah0s.xdt5ytf.xqjyukv.x1qjc9v5.x1oa3qoh.x1nhvcw1',{ timeout: 60000 }); 
     const [fileChooser] = await Promise.all([
@@ -203,11 +200,11 @@ async function postMeme(page, caption) {
     }
 
     await page.waitForSelector(nextSelector,{ timeout: 60000 });
-    console.log('Successfully logged in!');
+    console.log('Successfully posted meme!');
     await page.click(nextSelector);
 
     await page.waitForTimeout(2 * 60000);
-    console.log(" i work");
+    console.log("meme fully uploaded");
     await page.mouse.click(x, y);
   } catch (error) {
     console.log(error);
